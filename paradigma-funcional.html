@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script type="module">
+        import libFuncional from './ferramentas/libFuncional.js'
+
+        function soma(a, b, c, d, e) {
+            return a + b + c + d + e
+        }
+        const faltam3 = libFuncional.parcial(soma, 1, 2)
+        const falta1 = libFuncional.parcial(faltam3, 2, 3)
+        const concluir = falta1(1)
+        console.log(concluir)
+
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
