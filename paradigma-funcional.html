@@ -7,15 +7,75 @@
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script type="module">
-        import libFuncional from './ferramentas/libFuncional.js'
 
-        function soma(a, b, c, d, e) {
-            return a + b + c + d + e
-        }
-        const faltam3 = libFuncional.parcial(soma, 1, 2)
-        const falta1 = libFuncional.parcial(faltam3, 2, 3)
-        const concluir = falta1(1)
-        console.log(concluir)
+        import libFuncional from './uteis/libFuncional.js'
+        import texto from './uteis/texto.js'
+        import math from './uteis/math.js'
+
+        // const reqCarrinho = libFuncional.parcial(
+        //     fetch,
+        //     'http://localhost/api/airton-klauck/15-anos-thais',
+        //     {
+        //         headers: {
+        //             'Accept': 'application/json',
+        //             'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzYW9JZCI6IjY4OTI2ZmVlMTM3ZDBlZDliZjFjMGQ5MyIsInRpcG8iOiJhY2Nlc3MiLCJfaWQiOiIkMmEkMTAka0QvUGhZcTVuMTFsb3hORHNiVDRrdXkucmdUZkcyemNFem5sSWFPNDNtYXJZYWRrNWVGNUciLCJ1cmxFdmVudG8iOiIxNS1hbm9zLXRoYWlzIiwidXJsRXN0dWRpbyI6ImFpcnRvbi1rbGF1Y2siLCJpYXQiOjE3NTQ0Mjc3ODQsImV4cCI6MTc4NTk2Mzc4NH0.lfGpr7MOh3qPtlmze2g----ifg8WgwvSHHHAo5mEFi0',
+        //             // 'Content-Type': ''
+        //         }
+        //     }
+        // )
+
+        // reqCarrinho()
+        //     .then(texto.paraJson)
+        //     .then(dados => dados.carrinho.itens.map(item => item.tamanhoPrecoEscolhido.precoImagem))
+        //     .then(console.log)
+
+        const reqProdutos = libFuncional.parcial(
+            fetch,
+            'http://localhost:5000/produtos'
+        )
+
+        const extraiPreco = libFuncional.prop('preco')
+        const desconta20 = math.multiplicar(.8)
+        const taxa5 = math.multiplicar(1.05)
+
+        // const precoFinalProduto = libFuncional.compor(
+        //     taxa5,
+        //     desconta20,
+        //     extraiPreco
+        // )
+        
+        const precoFinalProduto = libFuncional.pipe(
+            extraiPreco,
+            desconta20,
+            taxa5
+        )
+
+        reqProdutos()
+            .then(texto.paraJson)
+            .then(libFuncional.map(precoFinalProduto))
+            .then(math.somar)
+            // .then(console.log)
+
+            const valorFinalProduto = libFuncional.pipePromisses(
+                reqProdutos,
+                texto.paraJson,
+                libFuncional.map(precoFinalProduto),
+                math.somar,
+                console.log
+            )()
+
+        const pares = libFuncional.filter(math.ehPar)
+
+        // console.log('pares', pares([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+
+        const maiorQ5 = math.maiorOuIgualQue(5)
+        // console.log(libFuncional.filter(maiorQ5)([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+
+        const inc = math.adicionar(1)
+
+        const dobrar = math.multiplicar(2)
+
+        // console.log(libFuncional.pipe(inc, dobrar)(30))
 
     </script>
 </head>

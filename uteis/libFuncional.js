@@ -60,38 +60,46 @@ function deArgsParaArray(fn) {
 
 // console.log(valoresMais10)
 
-// Ex 2 ------------------------------------
-
-function paraJson(dados) {
-    return dados.json()
-}
-
-const reqCarrinho = parcial(
-    fetch,
-    'http://localhost/api/airton-klauck/15-anos-thais',
-    {
-        headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzYW9JZCI6IjY4OTI2ZmVlMTM3ZDBlZDliZjFjMGQ5MyIsInRpcG8iOiJhY2Nlc3MiLCJfaWQiOiIkMmEkMTAka0QvUGhZcTVuMTFsb3hORHNiVDRrdXkucmdUZkcyemNFem5sSWFPNDNtYXJZYWRrNWVGNUciLCJ1cmxFdmVudG8iOiIxNS1hbm9zLXRoYWlzIiwidXJsRXN0dWRpbyI6ImFpcnRvbi1rbGF1Y2siLCJpYXQiOjE3NTQ0Mjc3ODQsImV4cCI6MTc4NTk2Mzc4NH0.lfGpr7MOh3qPtlmze2g----ifg8WgwvSHHHAo5mEFi0',
-            // 'Content-Type': ''
-        }
-    }
-)
-
-const precoItens = map()
-
-reqCarrinho()
-    .then(paraJson)
-    .then(dados => dados.carrinho.itens.map(item => item.tamanhoPrecoEscolhido.precoImagem))
-    .then(console.log)
-
 function parcial(fn, ...args) {
     return (...novosArgs) => fn(...args, ...novosArgs)
+}
+
+function compor(...fns) {
+    return arg => fns.reduceRight((acc, fnAtual) => fnAtual(acc), arg)
+}
+
+function pipe(...fns) {
+    return arg => fns.reduce((acc, fnAtual) => fnAtual(acc), arg)
+}
+
+function comporPromisses(...fns) {
+    return arg =>
+        fns.reduceRight((acc, fnAtual) =>
+            Promise.resolve(acc).then(fnAtual),
+            arg
+        )
+}
+
+function pipePromisses(...fns) {
+    return arg =>
+        fns.reduce((acc, fnAtual) =>
+            Promise.resolve(acc)
+                .then(fnAtual),
+            arg
+        )
 }
 
 // MAP
 function map(fn) {
     return arr => arr.map(fn)
+}
+
+function filter(fn) {
+    return arr => arr.filter(fn)
+}
+
+function prop(prop) {
+    return obj => obj[prop]
 }
 
 
@@ -102,5 +110,11 @@ export default {
     deArrayParaArgs,
     deArgsParaArray,
     parcial,
-    map
+    compor,
+    pipe,
+    comporPromisses,
+    pipePromisses,
+    map,
+    filter,
+    prop
 }
